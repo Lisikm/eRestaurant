@@ -1,6 +1,7 @@
 {% extends 'home.html' %}
 {% block content %}
     <h1>Name: {{ menu.name }}</h1>
+    <h3>Restaurant: <a href="{% url "restaurant" menu.restaurant.id %}">{{ menu.restaurant.name }}</a></h3>
     <h3>Category: {{ menu.restaurant.category }}</h3>
     <p>Description: {{ menu.description }}</p>
     <h2>Dishes:</h2>

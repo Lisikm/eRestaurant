@@ -3,10 +3,14 @@
     <h1>Name: {{ restaurant.name }}</h1>
     <h3>Category: {{ restaurant.category }}</h3>
     <p>Description: {{ restaurant.description }}</p>
+    <p>Opening hours:
+        {% for hour in restaurant.openinghours_set.all %}
+            {{ hour.get_day_of_the_week_display }}: {{ hour.from_hour }}-{{ hour.to_hour }},
+        {% endfor %}</p>
     <h2>Menus:</h2>
         <ol>
             {% for elem in restaurant.menu_set.all %}
-                <li>{{ elem.name }}</li>
+                <li><a href="{% url "menu" elem.id %}">{{ elem.name }}</a></li>
             {% endfor %}
         </ol>
 {% endblock content %}

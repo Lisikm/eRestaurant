@@ -20,12 +20,15 @@ class LoginView(View):
     def post(self, request):
         form = LoginForm(request.POST)
         if form.is_valid():
-            user = authenticate(username=form.cleaned_data['login'], password=form.cleaned_data['password'])
-            if user:
-                login(request, user)
-                return redirect("home")
-            else:
-                return render(request, "login.html", {"form": form, "error": "nie znalazlem uzytkownika"})
+            username = form.cleaned_data['login']
+            if User.objects.filter(username=username):
+                user = authenticate(username=username, password=form.cleaned_data['password'])
+                if user:
+                    login(request, user)
+                    return redirect("home")
+                else:
+                    return render(request, "login.html", {"form": form, "error": "Wrong password"})
+            return render(request, "login.html", {"form": form, "error": "User not found"})
         else:
             return render(request, "login.html", {"form": form})
 

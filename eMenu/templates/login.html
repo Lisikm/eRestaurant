@@ -5,4 +5,7 @@
         {{ form.as_p }}
         <input type="submit" value="Wyślij">
     </form>
+    {% if error %}
+    <h2>{{ error }}</h2>
+    {% endif %}
 {% endblock content %}

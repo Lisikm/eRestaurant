@@ -68,6 +68,7 @@ class OpeningHours(models.Model):
 
     class Meta:
         unique_together = ('day_of_the_week', 'restaurant')
+        ordering = ['day_of_the_week']
 
 
 class Menu(models.Model):
