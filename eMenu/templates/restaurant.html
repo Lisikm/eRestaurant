@@ -1,0 +1,12 @@
+{% extends 'home.html' %}
+{% block content %}
+    <h1>Name: {{ restaurant.name }}</h1>
+    <h3>Category: {{ restaurant.category }}</h3>
+    <p>Description: {{ restaurant.description }}</p>
+    <h2>Menus:</h2>
+        <ol>
+            {% for elem in restaurant.menu_set.all %}
+                <li>{{ elem.name }}</li>
+            {% endfor %}
+        </ol>
+{% endblock content %}

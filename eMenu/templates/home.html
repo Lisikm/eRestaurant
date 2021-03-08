@@ -8,6 +8,8 @@
     <h1>eRestaurant</h1>
     <ul>
         <li><a href="{% url "add-user" %}">Add new User</a></li>
+        <li><a href="{% url "restaurant-list" %}">Restaurant list</a></li>
+        <li><a href="{% url "menu-list" %}">Menu list</a></li>
     </ul>
     {% block content %}
     {% endblock %}
