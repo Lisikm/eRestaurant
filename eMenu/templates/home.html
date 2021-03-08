@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>eRestaurant</title>
+</head>
+<body>
+    <h1>eRestaurant</h1>
+    <ul>
+        <li><a href="{% url "add-user" %}">Add new User</a></li>
+    </ul>
+    {% block content %}
+    {% endblock %}
+    <footer>
+        {% if user.is_authenticated %}
+            Zalogowano. ({{ user.username }})
+            <a href="{% url "logout" %}">logout</a>
+        {% else %}
+            Niezalogowano. <a href="{% url "login" %}">login</a>
+        {% endif %}
+    </footer>
+</body>
+
+</html>

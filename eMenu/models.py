@@ -56,6 +56,9 @@ class Restaurant(models.Model):
     category = models.CharField(choices=CATEGORY, max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.name
+
 
 class OpeningHours(models.Model):
     day_of_the_week = models.IntegerField(choices=DOTW)
@@ -74,6 +77,9 @@ class Menu(models.Model):
     mod_date = models.DateField(auto_now_add=True)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
 
 
 class Dish(models.Model):
