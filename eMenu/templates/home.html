@@ -7,18 +7,22 @@
 <body>
     <h1>eRestaurant</h1>
     <ul>
-        <li><a href="{% url "add-user" %}">Add new User</a></li>
         <li><a href="{% url "restaurant-list" %}">Restaurant list</a></li>
         <li><a href="{% url "menu-list" %}">Menu list</a></li>
+         {% if user.is_authenticated %}
+             <li><a href="{% url "logout" %}">Log out</a></li>
+         {% else %}
+             <li><a href="{% url "add-user" %}">Add new User</a></li>
+             <li><a href="{% url "login" %}">Sign in</a></li>
+         {% endif %}
     </ul>
     {% block content %}
     {% endblock %}
     <footer>
         {% if user.is_authenticated %}
-            Zalogowano. ({{ user.username }})
-            <a href="{% url "logout" %}">logout</a>
+            You are logged in as: {{ user.username }}
         {% else %}
-            Niezalogowano. <a href="{% url "login" %}">login</a>
+            You are not logged in.
         {% endif %}
     </footer>
 </body>

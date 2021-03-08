@@ -75,7 +75,7 @@ class Menu(models.Model):
     name = models.CharField(max_length=255, unique=True)
     description = models.CharField(max_length=255)
     add_date = models.DateField(auto_now_add=True)
-    mod_date = models.DateField(auto_now_add=True)
+    mod_date = models.DateField(auto_now=True)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -89,7 +89,7 @@ class Dish(models.Model):
     price = models.IntegerField()
     preparation_time = models.IntegerField()
     add_date = models.DateField(auto_now_add=True)
-    mod_date = models.DateField(auto_now_add=True)
+    mod_date = models.DateField(auto_now=True)
     is_wegetarian = models.BooleanField()
     menu = models.ManyToManyField(Menu)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
