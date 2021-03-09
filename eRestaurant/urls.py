@@ -17,16 +17,19 @@ from django.contrib import admin
 from django.urls import path
 from eMenu.views import HomeView, LoginView, LogoutView, AddUserView, RestaurantListView, RestaurantView, MenuListView,\
     MenuView
-
+from eReservation.views import TableListView, TableReservationView, MakeReservationView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', HomeView.as_view(), name='home'),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('add_user/', AddUserView.as_view(), name='add-user'),
-    path('restaurants/', RestaurantListView.as_view(), name='restaurant-list'),
-    path('restaurants/<int:pk>/', RestaurantView.as_view(), name='restaurant'),
+    path('restaurant/', RestaurantListView.as_view(), name='restaurant-list'),
+    path('restaurant/<int:pk>/', RestaurantView.as_view(), name='restaurant'),
     path('menu/', MenuListView.as_view(), name='menu-list'),
     path('menu/<int:pk>/', MenuView.as_view(), name='menu'),
+    path('tables/<int:pk>/', TableListView.as_view(), name='table-list'),
+    path('table/<int:pk>/reservation/', TableReservationView.as_view(), name='table-reservation'),
+    path('restaurant/<int:pk>/make_reservation/', MakeReservationView.as_view(), name='make-reservation')
 
 ]

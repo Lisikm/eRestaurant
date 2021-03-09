@@ -4,9 +4,13 @@ from django.contrib.auth.models import User
 
 
 class Table(models.Model):
+    name = models.CharField(max_length=128)
     description = models.CharField(max_length=255)
-    num_of_chairs = models.IntegerField()
+    seats = models.IntegerField()
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('name', 'restaurant')
 
 
 class Reservation(models.Model):
@@ -16,3 +20,6 @@ class Reservation(models.Model):
     table = models.ForeignKey(Table, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=255, null=True)
+
+    class Meta:
+        ordering = ['date', 'from_hour']

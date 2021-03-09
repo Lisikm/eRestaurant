@@ -1,0 +1,15 @@
+{% extends 'home.html' %}
+{% block content %}
+    <h3>Restaurant: <a href="{% url "restaurant" restaurant.id %}">{{ restaurant.name }}</a></h3>
+    <p>Opening hours:
+    <ul>
+        {% for hour in restaurant.openinghours_set.all %}
+            <li>{{ hour.get_day_of_the_week_display }}: {{ hour.from_hour }}-{{ hour.to_hour }},</li>
+        {% endfor %}
+    </ul></p>
+
+    {% for elem in next_days %}
+        <p>{{ elem }}</p>
+        <p><b>{{ elem.0 }}, {{ elem.1 }}</b></p>
+    {% endfor %}
+{% endblock content %}

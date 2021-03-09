@@ -13,4 +13,7 @@
                 <li><a href="{% url "menu" elem.id %}">{{ elem.name }}</a></li>
             {% endfor %}
         </ol>
+    <h2><a href="{% url "make-reservation" restaurant.id %}">Make reservation</a></h2>
+    <h2><a href="{% url "table-list" restaurant.id %}">Tables list</a></h2>
+
 {% endblock content %}

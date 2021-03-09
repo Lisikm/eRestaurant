@@ -1,0 +1,33 @@
+{% extends 'home.html' %}
+{% block content %}
+    <h1>Name: {{ table.name }}</h1>
+    <h3>Restaurant: <a href="{% url "restaurant" table.restaurant.id %}">{{ table.restaurant.name }}</a></h3>
+    <p>Opening hours:
+    <ul>
+        {% for hour in table.restaurant.openinghours_set.all %}
+            <li>{{ hour.get_day_of_the_week_display }}: {{ hour.from_hour }}-{{ hour.to_hour }},</li>
+        {% endfor %}
+    </ul></p>
+    <h3>Seats: {{ table.seats }}</h3>
+    <h3>Description: {{ table.description }}</h3>
+    <h2>Possible reservations:</h2>
+    <ul>
+    {% for elem in next_days %}
+        <li><b>{{ elem.0 }}, {{ elem.1 }}:</b>
+            {% if elem.3 == elem.4 %}
+                <p>Whole day reserved.</p>
+            {% else %}
+            <p><ul>
+            {% for ele in elem.3 %}
+                {% if ele not in elem.4 %}
+                    <li>{{ ele }}</li>
+                {% endif %}
+            {% endfor %}
+            </ul></p>
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+
+    <h3><a href="{% url "table-list" table.restaurant.id %}">Back to tables list</a></h3>
+{% endblock content %}
