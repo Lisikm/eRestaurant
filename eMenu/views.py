@@ -11,6 +11,11 @@ class HomeView(View):
         return render(request, "home.html")
 
 
+class ContactView(View):
+    def get(self, request):
+        return render(request, "contact.html")
+
+
 class LoginView(View):
 
     def get(self, request):

@@ -1,15 +1,27 @@
 {% extends 'home.html' %}
 {% block content %}
     <h3>Restaurant: <a href="{% url "restaurant" restaurant.id %}">{{ restaurant.name }}</a></h3>
-    <p>Opening hours:
+    <p>Opening hours:</p>
     <ul>
         {% for hour in restaurant.openinghours_set.all %}
             <li>{{ hour.get_day_of_the_week_display }}: {{ hour.from_hour }}-{{ hour.to_hour }},</li>
         {% endfor %}
-    </ul></p>
-
+    </ul>
+    {% if error %}
+        <h2>{{ error }}</h2>
+    {% endif %}
+    Select the date and hour for which you want to reserve a table:
     {% for elem in next_days %}
-        <p>{{ elem }}</p>
-        <p><b>{{ elem.0 }}, {{ elem.1 }}</b></p>
+        <p><b>{{ elem.0 }}, {{ elem.1 }}</b>
+        <form method="post">
+        {% csrf_token %}
+            <select name="hour">
+                {% for el in elem.3 %}
+                    <option value="{{ el }}">{{ el }}</option>
+                {% endfor %}
+            </select>
+        <input type="hidden" name="day" value="{{ elem.0 }}">
+        <input type="submit" value="Look for a table"> </p>
+        </form>
     {% endfor %}
 {% endblock content %}

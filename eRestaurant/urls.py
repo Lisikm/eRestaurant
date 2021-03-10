@@ -16,11 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from eMenu.views import HomeView, LoginView, LogoutView, AddUserView, RestaurantListView, RestaurantView, MenuListView,\
-    MenuView
-from eReservation.views import TableListView, TableReservationView, MakeReservationView
+    MenuView, ContactView
+from eReservation.views import TableListView, TableReservationsView, ReservationDateView, ReserveTableView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', HomeView.as_view(), name='home'),
+    path('contact/', ContactView.as_view(), name='contact'),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('add_user/', AddUserView.as_view(), name='add-user'),
@@ -29,7 +31,8 @@ urlpatterns = [
     path('menu/', MenuListView.as_view(), name='menu-list'),
     path('menu/<int:pk>/', MenuView.as_view(), name='menu'),
     path('tables/<int:pk>/', TableListView.as_view(), name='table-list'),
-    path('table/<int:pk>/reservation/', TableReservationView.as_view(), name='table-reservation'),
-    path('restaurant/<int:pk>/make_reservation/', MakeReservationView.as_view(), name='make-reservation')
+    path('table/<int:pk>/reservations/', TableReservationsView.as_view(), name='table-reservations'),
+    path('restaurant/<int:pk>/reservation_date/', ReservationDateView.as_view(), name='reservation-date'),
+    path('restaurant/<int:pk>/<str:day>/<int:hour>/', ReserveTableView.as_view(), name='reserve-table'),
 
 ]

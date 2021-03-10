@@ -1,15 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, HttpResponse
 from django.views import View
 from datetime import date, timedelta
 from .models import Table, Reservation
-from eMenu.models import Restaurant
-
-
-class TableListView(View):
-    def get(self, request, pk):
-        tables = Table.objects.filter(restaurant_id=pk)
-        return render(request, "tablelist.html", {"tables": tables})
-
+from eMenu.models import Restaurant, OpeningHours
+import re
 
 DOTWDICT = {
     0: "Monday",
@@ -48,6 +42,28 @@ HOURSDICT = {
     24: "00:00"
 }
 
+MONTHDICT = {
+    "01": "January",
+    "02": "February",
+    "03": "March",
+    "04": "April",
+    "05": "May",
+    "06": "June",
+    "07": "July",
+    "08": "August",
+    "09": "September",
+    "10": "October",
+    "11": "November",
+    "12": "December",
+}
+
+
+def month_by_dict_value(month):
+    for key, value in MONTHDICT.items():
+        if month == value:
+            return key
+    return None
+
 
 def next_seven_days():
     n7d = []
@@ -59,23 +75,55 @@ def next_seven_days():
     return n7d
 
 
-class TableReservationView(View):
+def next_opening_days(restaurant):
+    next7d = next_seven_days()
+    next_days = []
+    for elem in next7d:
+        valid = False
+        for ele in restaurant.openinghours_set.all():
+            if (elem[2]) == ele.day_of_the_week:
+                valid = True
+                break
+        if valid:
+            from_hour = restaurant.openinghours_set.filter(day_of_the_week=elem[2])[0].from_hour
+            to_hour = restaurant.openinghours_set.filter(day_of_the_week=elem[2])[0].to_hour
+            elem.append([(HOURSDICT[x]) for x in range(from_hour, to_hour)])
+            next_days.append(elem)
+    return next_days
+
+
+def day_in_next_days(day, next_days):
+    valid = False
+    for elem in next_days:
+        date = str(elem[0])
+        if day == date:
+            valid = True
+    return valid
+
+
+def hour_in_day(next_days, day, hour):
+    valid = False
+    for elem in next_days:
+        date = str(elem[0])
+        if day == date:
+            if HOURSDICT[hour] in elem[3]:
+                valid = True
+    return valid
+
+
+class TableListView(View):
+    def get(self, request, pk):
+        tables = Table.objects.filter(restaurant_id=pk)
+        return render(request, "tablelist.html", {"tables": tables})
+
+
+class TableReservationsView(View):
     def get(self, request, pk):
         table = Table.objects.get(pk=pk)
-        next7d = next_seven_days()
-        next_days = []
-        for elem in next7d:
-            valid = False
-            for ele in table.restaurant.openinghours_set.all():
-                if (elem[2]) == ele.day_of_the_week:
-                    valid = True
-                    break
-            if valid:
-                from_hour = table.restaurant.openinghours_set.filter(day_of_the_week=elem[2])[0].from_hour
-                to_hour = table.restaurant.openinghours_set.filter(day_of_the_week=elem[2])[0].to_hour
-                elem.append([HOURSDICT[x] for x in range(from_hour, to_hour)])
-                elem.append([])
-                next_days.append(elem)
+        restaurant = table.restaurant
+        next_days = next_opening_days(restaurant)
+        for elem in next_days:
+            elem.append([])
         reservations = table.reservation_set.all()
         for elem in reservations:
             for ele in next_days:
@@ -88,18 +136,112 @@ class TableReservationView(View):
         })
 
 
-class MakeReservationView(View):
+class ReservationDateView(View):
     def get(self, request, pk):
         restaurant = Restaurant.objects.get(pk=pk)
-        next7d = next_seven_days()
-        next_days = []
-        for elem in next7d:
-            valid = False
-            for ele in restaurant.openinghours_set.all():
-                if (elem[2]) == ele.day_of_the_week:
-                    valid = True
-                    break
-            if valid:
-                next_days.append(elem)
+        next_days = (next_opening_days(restaurant))
+        return render(request, "makereservation.html", {"restaurant": restaurant, "next_days": next_days})
 
-        return render(request, "makereservation.html", {"restaurant":restaurant, "next_days":next_days})
+    def post(self, request, pk):
+        day = request.POST.get("day")
+        hour = request.POST.get("hour")
+        restaurant = Restaurant.objects.get(pk=pk)
+        next_days = (next_opening_days(restaurant))
+        error = "Something went wrong. Please select date and hour again."
+        if day and hour:
+            try:
+                day = day.split()
+                day = f"{day[2]}-{month_by_dict_value(day[0])}-{day[1][:-1]}"
+                hour = int(hour[:2])
+            except:
+                return render(request, "makereservation.html", {"restaurant": restaurant, "next_days": next_days,
+                                                                "error": error})
+            if re.fullmatch("^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$", day) and hour in HOURSDICT:
+                day_valid = day_in_next_days(day, next_days)
+                hour_valid = hour_in_day(next_days, day, hour)
+                if not day_valid or not hour_valid:
+                    return render(request, "makereservation.html", {"restaurant": restaurant, "next_days": next_days,
+                                                                    "error": error})
+                return redirect("reserve-table", pk, day, hour)
+        return render(request, "makereservation.html", {"restaurant": restaurant, "next_days": next_days,
+                                                        "error": error})
+
+
+def tables_possible_to_reserve(restaurant, day, hour):
+    """Returning array with tables and possible duration of reservation"""
+    opening_hours = OpeningHours.objects.get(
+        restaurant=restaurant,
+        day_of_the_week=(date(int(day[:4]), int(day[5:7]), int(day[8:10])).weekday() + 1))
+    all_tables = restaurant.table_set.filter(seats__lte=4)
+    tables_reservations = []
+    tables = []
+    for elem in all_tables:
+        table = elem
+        reservations = elem.reservation_set.filter(date=day)
+        tables_reservations.append([table, reservations])
+    for elem in tables_reservations:
+        hours_reserved = []
+        for el in elem[1]:
+            for x in range(el.from_hour, el.to_hour):
+                hours_reserved.append(HOURSDICT[x])
+        if HOURSDICT[hour] not in hours_reserved:
+            biggest_hour = hour  # first biggest hour greater than reservation hour
+            for el in hours_reserved:
+                if int(el[:2]) > biggest_hour:
+                    biggest_hour = int(el[:2])
+                    break
+            if biggest_hour == hour:
+                if biggest_hour == opening_hours.to_hour - 1:
+                    res_duration = [1]
+                else:
+                    res_duration = [1, 2]
+            elif biggest_hour - hour >= 2:
+                res_duration = [1, 2]
+            else:
+                res_duration = [1]
+            tables.append([elem[0], res_duration])
+    return tables
+
+
+class ReserveTableView(View):
+    def get(self, request, pk, day, hour):
+        restaurant = Restaurant.objects.get(pk=pk)
+        next_days = (next_opening_days(restaurant))
+        error = "Something went wrong."
+        if re.fullmatch("^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$", day) and hour in HOURSDICT:
+            day = day
+            hour = hour
+            day_valid = day_in_next_days(day, next_days)
+            hour_valid = hour_in_day(next_days, day, hour)
+            if not day_valid or not hour_valid:
+                return render(request, "error.html", {"error": error})
+            tables = tables_possible_to_reserve(restaurant,day,hour)
+            return render(request, "reservetable.html", {"restaurant": restaurant, "day": day,
+                                                         "hour": HOURSDICT[hour], "tables": tables})
+        return render(request, "error.html", {"error": error})
+
+    def post(self, request, pk, day, hour):
+        error = "Something went wrong."
+        restaurant = Restaurant.objects.get(pk=pk)
+        duration = request.POST.get("duration")
+        table_id = request.POST.get("table")
+        if duration and table_id:
+            try:
+                duration = int(duration)
+                table = Table.objects.get(pk=table_id)
+            except:
+                return render(request, "error.html", {"error": error})
+            tables = tables_possible_to_reserve(restaurant, day, hour)
+            table_valid = False
+            duration_valid = False
+            for elem in tables:
+                if table == elem[0]:
+                    table_valid = True
+                    if duration in elem[1]:
+                        duration_valid = True
+                        break
+            if not table_valid or not duration_valid:
+                return render(request, "error.html", {"error": error})
+
+            return render(request, "successreservation.html", {"duration": duration, "table": table})
+        return render(request, "error.html", {"error": error})

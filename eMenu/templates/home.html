@@ -9,6 +9,7 @@
     <ul>
         <li><a href="{% url "restaurant-list" %}">Restaurant list</a></li>
         <li><a href="{% url "menu-list" %}">Menu list</a></li>
+        <li><a href="{% url "contact" %}">Contact</a></li>
          {% if user.is_authenticated %}
              <li><a href="{% url "logout" %}">Log out</a></li>
          {% else %}
