@@ -12,7 +12,9 @@
     {% endif %}
     Select the date and hour for which you want to reserve a table:
     {% for elem in next_days %}
+        {{ elem }}
         <p><b>{{ elem.0 }}, {{ elem.1 }}</b>
+        {% if elem.3 %}
         <form method="post">
         {% csrf_token %}
             <select name="hour">
@@ -23,5 +25,9 @@
         <input type="hidden" name="day" value="{{ elem.0 }}">
         <input type="submit" value="Look for a table"> </p>
         </form>
+        {% else %}
+            <p>There are no tables available for this day.</p>
+        {% endif %}
+
     {% endfor %}
 {% endblock content %}

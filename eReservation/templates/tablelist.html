@@ -7,7 +7,7 @@
             <h2>{{ table.name }}</h2>
             <p>Description: {{ table.description }}</p>
             <p>Seats: {{ table.seats }}</p>
-            <p><a href="{% url "table-reservations" table.id %}">Possible reservation</a></p>
+            <p><a href="{% url "table-reservations" table.id %}">Possible reservations</a></p>
         </li>
     {% endfor %}
     </ol>

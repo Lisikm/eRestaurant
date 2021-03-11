@@ -1,5 +1,6 @@
 {% extends 'home.html' %}
 {% block content %}
+    {% load static %}
     <h3>Restaurant: <a href="{% url "restaurant" restaurant.id %}">{{ restaurant.name }}</a></h3>
     <p>Opening hours:</p>
     <ul>
@@ -22,11 +23,13 @@
             {% endfor %}
         </select>
             hours.
+        <p><button type="button">Show text field to add note</button></p>
         <input type="hidden" name="table" value="{{ elem.0.id }}">
-        <input type="submit" value="Book table">
+            <p><input type="submit" value="Book table"></p>
         </form>
     </li>
     {% endfor %}
     </ul>
     <h3><a href="{% url "reservation-date" restaurant.id %}">Back to date select</a></h3>
+    <script src="{% static '/js/add_note.js' %}" type="text/javascript"></script>
 {% endblock content %}
