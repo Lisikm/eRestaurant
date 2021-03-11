@@ -1,0 +1,10 @@
+{% extends 'home.html' %}
+{% block content %}
+    <ol>
+    {% for restaurant in restaurants %}
+        <li>
+            <h2><a href="{% url "restaurant" restaurant.id %}">{{ restaurant.name }}</a></h2>
+        </li>
+    {% endfor %}
+    </ol>
+{% endblock content %}

@@ -1,0 +1,7 @@
+{% extends 'home.html' %}
+{% block content %}
+    <ul>
+    <li><a href="{% url "user-restaurants" %}">My restaurants</a></li>
+    <li><a href="{% url "user-reservations" %}">My reservations</a></li>
+    </ul>
+{% endblock content %}

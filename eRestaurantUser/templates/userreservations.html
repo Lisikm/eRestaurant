@@ -1,0 +1,16 @@
+{% extends 'home.html' %}
+{% block content %}
+    <h3>Booking information:</h3>
+    <ol>
+    {% for reservation in reservations %}
+        <li>
+            <p>Restaurant: {{ reservation.table.restaurant.name }}</p>
+            <p>Table: {{ reservation.table.name }}</p>
+            <p>Reservation hours: {{ reservation.from_hour }}-{{ reservation.to_hour }}</p>
+            {% if reservation.description %}
+            <p>Note: {{ reservation.description }}</p>
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ol>
+{% endblock content %}

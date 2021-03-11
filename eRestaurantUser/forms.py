@@ -1,7 +1,6 @@
 import django.forms as forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from django.core.validators import validate_email
 
 
 class LoginForm(forms.Form):

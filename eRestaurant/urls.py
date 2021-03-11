@@ -15,9 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from eMenu.views import HomeView, LoginView, LogoutView, AddUserView, RestaurantListView, RestaurantView, MenuListView,\
+from eMenu.views import HomeView, RestaurantListView, RestaurantView, MenuListView,\
     MenuView, ContactView
 from eReservation.views import TableListView, TableReservationsView, ReservationDateView, ReserveTableView
+from eRestaurantUser.views import UserPanelView, UserRestaurantsView, LoginView, LogoutView, AddUserView, \
+    UserReservationsView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,5 +36,7 @@ urlpatterns = [
     path('table/<int:pk>/reservations/', TableReservationsView.as_view(), name='table-reservations'),
     path('restaurant/<int:pk>/reservation_date/', ReservationDateView.as_view(), name='reservation-date'),
     path('restaurant/<int:pk>/<str:day>/<int:hour>/', ReserveTableView.as_view(), name='reserve-table'),
-
+    path('user_panel/', UserPanelView.as_view(), name='user-panel'),
+    path('user_panel/restaurants/', UserRestaurantsView.as_view(), name='user-restaurants'),
+    path('user_panel/reservations/', UserReservationsView.as_view(), name='user-reservations'),
 ]

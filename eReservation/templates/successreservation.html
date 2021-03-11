@@ -3,7 +3,7 @@
     <h1>Congratulations, you booked a table.</h1>
 
     <h3>Booking information:</h3>
-    <p>Restauracja: {{ reservation.table.restaurant.name }}</p>
+    <p>Restaurant: {{ reservation.table.restaurant.name }}</p>
     <p>Table: {{ reservation.table.name }}</p>
     <p>Reservation hours: {{ reservation.from_hour }}-{{ reservation.to_hour }}</p>
     {% if reservation.description %}

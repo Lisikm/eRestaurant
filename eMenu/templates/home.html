@@ -11,6 +11,7 @@
         <li><a href="{% url "menu-list" %}">Menu list</a></li>
         <li><a href="{% url "contact" %}">Contact</a></li>
          {% if user.is_authenticated %}
+             <li><a href="{% url "user-panel" %}">User panel</a></li>
              <li><a href="{% url "logout" %}">Log out</a></li>
          {% else %}
              <li><a href="{% url "add-user" %}">Add new User</a></li>
