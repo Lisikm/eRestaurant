@@ -1,0 +1,14 @@
+{% extends 'home.html' %}
+{% block content %}
+    <h3>Notes for restaurant: {{ notes.0.restaurant.name }}</h3>
+    <ol>
+    {% for note in notes %}
+        <li>
+            <p>Title: {{ note.title }}</p>
+            <p>Content: {{ note.content }}</p>
+            <p>From user: {{ note.user }} / email: {{ note.email }}</p>
+            <p><a href="{% url "restaurant-note-delete" note.id %}">Delete note</a></p>
+        </li>
+    {% endfor %}
+    </ol>
+{% endblock content %}

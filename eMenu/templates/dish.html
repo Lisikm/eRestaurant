@@ -1,0 +1,11 @@
+{% extends 'home.html' %}
+{% block content %}
+    <h2>Dish view</h2>
+    <h3>{{ dish.name }}</h3>
+    <p>{{ dish.description }}</p>
+    <p>Price {{ dish.price }}</p>
+    <p>Preparation time: {{ dish.preparation_time }}</p>
+    <p>Is wegetarian: {{ dish.is_wegetarian }}</p>
+
+    <a href="{% url "dish-modify" dish.id %}">Modify</a>
+{% endblock content %}

@@ -46,7 +46,7 @@ HOURS = (
     (21, "21:00"),
     (22, "22:00"),
     (23, "23:00"),
-    (24, "00:00")
+    (24, "24:00")
 )
 
 
@@ -55,6 +55,7 @@ class Restaurant(models.Model):
     description = models.CharField(max_length=255)
     category = models.CharField(choices=CATEGORY, max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    authorized = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -78,6 +79,7 @@ class Menu(models.Model):
     mod_date = models.DateField(auto_now=True)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    authorized = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -92,4 +94,15 @@ class Dish(models.Model):
     mod_date = models.DateField(auto_now=True)
     is_wegetarian = models.BooleanField()
     menu = models.ManyToManyField(Menu)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+
+class Note(models.Model):
+    title = models.CharField(max_length=128)
+    content = models.TextField()
+    email = models.EmailField()
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)

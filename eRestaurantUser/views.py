@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from eMenu.models import Restaurant
+from eMenu.models import Restaurant, Note, Menu
 from eReservation.models import Reservation
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -68,3 +68,24 @@ class UserReservationsView(View):
     def get(self, request):
         reservations = Reservation.objects.filter(user=request.user)
         return render(request, "userreservations.html", {"reservations":reservations})
+
+
+class UserRestaurantNotesView(View):
+    def get(self, request, pk):
+        notes = Note.objects.filter(restaurant_id=pk)
+        return render(request, "restaurantnotes.html", {"notes":notes})
+
+
+class UserRestaurantNoteDeleteView(View):
+    def get(self, request, pk):
+        try:
+            note = Note.objects.get(pk=pk)
+        except:
+            return redirect("error")
+        if note.restaurant.user == request.user:
+            note_restaurant = note.restaurant
+            note.delete()
+            return redirect("restaurant-notes", note_restaurant.id)
+        else:
+            return redirect("error")
+

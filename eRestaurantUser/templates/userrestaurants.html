@@ -1,9 +1,23 @@
 {% extends 'home.html' %}
 {% block content %}
+    <p>Add new restaurant <a href="{% url "restaurant-add" %}">here</a></p>
     <ol>
     {% for restaurant in restaurants %}
         <li>
             <h2><a href="{% url "restaurant" restaurant.id %}">{{ restaurant.name }}</a></h2>
+                <a href="{% url "restaurant-notes" restaurant.id %}">Restaurant notes</a>
+        {% if restaurant.authorized %}
+            <p>Authorized</p>
+        {% else %}
+            <p>Not authorized</p>
+        {% endif %}
+        <p>Menus:
+        {% for menu in restaurant.menu_set.all %}
+            <a href="{% url "menu" menu.id %}">{{ menu.name }}</a>
+            (<a href="{% url "menu-modify" menu.id %}">Modify</a>),
+        {% endfor %}
+        <a href="{% url "menu-add" restaurant.id %}">Add new menu</a>
+        </p>
         </li>
     {% endfor %}
     </ol>

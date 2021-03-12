@@ -9,7 +9,6 @@
     <ul>
         <li><a href="{% url "restaurant-list" %}">Restaurant list</a></li>
         <li><a href="{% url "menu-list" %}">Menu list</a></li>
-        <li><a href="{% url "contact" %}">Contact</a></li>
          {% if user.is_authenticated %}
              <li><a href="{% url "user-panel" %}">User panel</a></li>
              <li><a href="{% url "logout" %}">Log out</a></li>
@@ -18,15 +17,14 @@
              <li><a href="{% url "login" %}">Sign in</a></li>
          {% endif %}
     </ul>
+    {% if user.is_authenticated %}
+            You are logged in as: {{ user.username }}
+    {% else %}
+            You are not logged in.
+    {% endif %}
+
     {% block content %}
     {% endblock %}
-    <footer>
-        {% if user.is_authenticated %}
-            You are logged in as: {{ user.username }}
-        {% else %}
-            You are not logged in.
-        {% endif %}
-    </footer>
 </body>
 
 </html>

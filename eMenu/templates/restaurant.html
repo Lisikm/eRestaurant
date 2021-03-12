@@ -14,7 +14,7 @@
             {% endfor %}
         </ol>
     <h2><a href="{% url "reservation-date" restaurant.id %}">Make reservation for 4 or less people</a></h2>
-    <h2><a href="{% url "contact" %}">Contact us for bigger reservations</a></h2>
+    <h2><a href="{% url "contact" restaurant.id %}">Contact us for bigger reservations</a></h2>
     <h2><a href="{% url "table-list" restaurant.id %}">Tables list</a></h2>
 
 {% endblock content %}
