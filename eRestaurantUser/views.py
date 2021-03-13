@@ -1,3 +1,5 @@
+from braces.views import GroupRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
 from eMenu.models import Restaurant, Note, Menu
@@ -28,7 +30,7 @@ class LoginView(View):
             return render(request, "login.html", {"form": form})
 
 
-class LogoutView(View):
+class LogoutView(LoginRequiredMixin, View):
     def get(self, request):
         logout(request)
         return redirect("home")
@@ -53,30 +55,36 @@ class AddUserView(View):
         return render(request, "adduser.html", {"form": form})
 
 
-class UserPanelView(View):
+class UserPanelView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, "userpanel.html")
 
 
-class UserRestaurantsView(View):
+class UserRestaurantsView(GroupRequiredMixin, View):
+    group_required = (u"Owners",)
+
     def get(self, request):
         restaurants = Restaurant.objects.filter(user=request.user)
         return render(request, "userrestaurants.html", {"restaurants":restaurants})
 
 
-class UserReservationsView(View):
+class UserReservationsView(LoginRequiredMixin, View):
     def get(self, request):
         reservations = Reservation.objects.filter(user=request.user)
         return render(request, "userreservations.html", {"reservations":reservations})
 
 
-class UserRestaurantNotesView(View):
+class UserRestaurantNotesView(GroupRequiredMixin, View):
+    group_required = u"Owners"
+
     def get(self, request, pk):
         notes = Note.objects.filter(restaurant_id=pk)
         return render(request, "restaurantnotes.html", {"notes":notes})
 
 
-class UserRestaurantNoteDeleteView(View):
+class UserRestaurantNoteDeleteView(GroupRequiredMixin, View):
+    group_required = u"Owners"
+
     def get(self, request, pk):
         try:
             note = Note.objects.get(pk=pk)

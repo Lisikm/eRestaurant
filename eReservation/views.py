@@ -1,3 +1,5 @@
+from braces.views import GroupRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, HttpResponse
 from django.views import View
 from datetime import date, timedelta
@@ -110,6 +112,7 @@ def hour_in_day(next_days, day, hour):
                 valid = True
     return valid
 
+
 def tables_possible_to_reserve(restaurant, day, hour):
     """Returning array with tables and possible duration of reservation"""
     opening_hours = OpeningHours.objects.get(
@@ -146,13 +149,17 @@ def tables_possible_to_reserve(restaurant, day, hour):
     return tables
 
 
-class TableListView(View):
+class TableListView(GroupRequiredMixin, View):
+    group_required = u"Owners"
+
     def get(self, request, pk):
         tables = Table.objects.filter(restaurant_id=pk)
         return render(request, "tablelist.html", {"tables": tables})
 
 
-class TableReservationsView(View):
+class TableReservationsView(GroupRequiredMixin, View):
+    group_required = u"Owners"
+
     def get(self, request, pk):
         table = Table.objects.get(pk=pk)
         restaurant = table.restaurant
@@ -171,7 +178,7 @@ class TableReservationsView(View):
         })
 
 
-class ReservationDateView(View):
+class ReservationDateView(LoginRequiredMixin, View):
     def get(self, request, pk):
         restaurant = Restaurant.objects.get(pk=pk)
         next_days = (next_opening_days(restaurant))
@@ -213,7 +220,7 @@ class ReservationDateView(View):
                                                         "error": error})
 
 
-class ReserveTableView(View):
+class ReserveTableView(LoginRequiredMixin, View):
     def get(self, request, pk, day, hour):
         restaurant = Restaurant.objects.get(pk=pk)
         next_days = (next_opening_days(restaurant))

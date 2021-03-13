@@ -61,3 +61,8 @@ class AddNewDishForm(forms.ModelForm):
 
 class AddExistingDishForm(forms.Form):
     dishes = forms.ModelChoiceField(queryset=Dish.objects.none())
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if user is not None:
+            self.fields["dishes"].queryset = Dish.objects.filter(user=user)

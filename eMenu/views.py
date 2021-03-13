@@ -1,7 +1,9 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
 from .models import Restaurant, Menu, Note, OpeningHours, Dish
 from .forms import NoteForm, AddRestaurantForm, AddRestaurantMenuForm, AddNewDishForm, AddExistingDishForm
+from braces.views import GroupRequiredMixin
 
 
 class HomeView(View):
@@ -15,7 +17,7 @@ class ErrorView(View):
         return render(request, "error.html", {"error":error})
 
 
-class ContactView(View):
+class ContactView(LoginRequiredMixin, View):
     def get(self, request, pk):
         form = NoteForm()
         return render(request, "contact.html", {"form": form})
@@ -59,7 +61,9 @@ class MenuView(View):
         return render(request, "menu.html", {"menu": menu})
 
 
-class AddRestaurantView(View):
+class AddRestaurantView(GroupRequiredMixin, View):
+    group_required = u"Owners"
+
     def get(self, request):
         form = AddRestaurantForm()
         return render(request, "addrestaurant.html", {"form": form})
@@ -93,7 +97,9 @@ class AddRestaurantView(View):
         return render(request, "addrestaurant.html", {"form": form})
 
 
-class AddRestaurantMenuView(View):
+class AddRestaurantMenuView(roupRequiredMixin, View):
+    group_required = u"Owners"
+
     def get(self, request, pk):
         form = AddRestaurantMenuForm()
         return render(request, "addmenu.html", {"form": form})
@@ -111,7 +117,9 @@ class AddRestaurantMenuView(View):
         return render(request, "addmenu.html", {"form": form})
 
 
-class ModifyRestaurantMenuView(View):
+class ModifyRestaurantMenuView(GroupRequiredMixin, View):
+    group_required = u"Owners"
+
     def get(self, request, pk):
         menu = Menu.objects.get(pk=pk)
         form = AddRestaurantMenuForm(initial={
@@ -131,13 +139,17 @@ class ModifyRestaurantMenuView(View):
         return render(request, "modifymenu.html", {"form": form, "menu": menu})
 
 
-class DishView(View):
+class DishView(GroupRequiredMixin, View):
+    group_required = u"Owners"
+
     def get(self, request, pk):
         dish = Dish.objects.get(pk=pk)
         return render(request, "dish.html", {"dish":dish})
 
 
-class AddNewDishView(View):
+class AddNewDishView(GroupRequiredMixin, View):
+    group_required = u"Owners"
+
     def get(self, request, pk):
         form = AddNewDishForm()
         return render(request, "addnewdish.html", {"form": form})
@@ -159,7 +171,9 @@ class AddNewDishView(View):
         return render(request, "addnewdish.html", {"form": form})
 
 
-class ModifyDishView(View):
+class ModifyDishView(GroupRequiredMixin, View):
+    group_required = u"Owners"
+
     def get(self, request, pk):
         dish = Dish.objects.get(pk=pk)
         form = AddNewDishForm(initial={
@@ -185,7 +199,9 @@ class ModifyDishView(View):
         return render(request, "modifydish.html", {"form": form})
 
 
-class RemoveFromMenuView(View):
+class RemoveFromMenuView(GroupRequiredMixin, View):
+    group_required = u"Owners"
+
     def get(self, request, m_pk, d_pk):
         try:
             dish = Dish.objects.get(pk=d_pk)
@@ -199,19 +215,17 @@ class RemoveFromMenuView(View):
             return redirect("error")
 
 
-class AddExistingDishToMenuView(View):
+class AddExistingDishToMenuView(GroupRequiredMixin, View):
+    group_required = u"Owners"
+
     def get(self, request, pk):
-        dishes = Dish.objects.filter(user=request.user)
-        form = AddExistingDishForm()
-        form.fields["dishes"].queryset = dishes
+        form = AddExistingDishForm(user=request.user)
         menu = Menu.objects.get(pk=pk)
         return render(request, "addexistingdish.html", {"form":form, "menu":menu})
 
     def post(self, request, pk):
-        form = AddExistingDishForm(request.POST)
+        form = AddExistingDishForm(request.POST, user=request.user)
         menu = Menu.objects.get(pk=pk)
-        dishes = Dish.objects.filter(user=request.user)
-        form.fields["dishes"].queryset = dishes
         if form.is_valid():
             dish = form.cleaned_data['dishes']
             menu.dish_set.add(dish)
