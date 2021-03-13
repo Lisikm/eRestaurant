@@ -1,30 +1,41 @@
+{% load static %}
 <!doctype html>
 <html>
 <head>
     <meta charset="utf-8">
     <title>eRestaurant</title>
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
 </head>
 <body>
-    <h1>eRestaurant</h1>
-    <ul>
-        <li><a href="{% url "restaurant-list" %}">Restaurant list</a></li>
-        <li><a href="{% url "menu-list" %}">Menu list</a></li>
-         {% if user.is_authenticated %}
-             <li><a href="{% url "user-panel" %}">User panel</a></li>
-             <li><a href="{% url "logout" %}">Log out</a></li>
-         {% else %}
-             <li><a href="{% url "add-user" %}">Add new User</a></li>
-             <li><a href="{% url "login" %}">Sign in</a></li>
-         {% endif %}
-    </ul>
-    {% if user.is_authenticated %}
-            You are logged in as: {{ user.username }}
-    {% else %}
-            You are not logged in.
-    {% endif %}
+    <div class="flex-space header">
+        <div class="logo center">
+            <h1>eRestaurant</h1>
+        </div>
+        <div class="center">
+            <div class="header-buttons header-buttons">
+                <a class="button" href="{% url "restaurant-list" %}">Restaurant list</a>
+                <a class="button" href="{% url "menu-list" %}">Menu list</a>
+                {% if user.is_authenticated %}
+                    <a class="button" href="{% url "user-panel" %}">User panel</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="center" style="margin-right: 20px">
+            {% if user.is_authenticated %}
+                <div class="log-text">You are logged in as: <b>{{ user.username }}</b></div>
+                <div><a class="log-button" href="{% url "logout" %}">Log out</a></div>
+            {% else %}
+                <div class="log-text">You are not logged in.</div>
+                <div><a class="log-button" href="{% url "login" %}">Sign in</a></div>
+                <div><a class="log-button" href="{% url "add-user" %}">Add new User</a></div>
 
+            {% endif %}
+        </div>
+    </div>
+    <div class="">
     {% block content %}
     {% endblock %}
+    </div>
 </body>
 
 </html>

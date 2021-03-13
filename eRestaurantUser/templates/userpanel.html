@@ -1,7 +1,10 @@
 {% extends 'home.html' %}
+{% load auth_extras %}
 {% block content %}
     <ul>
+    {% if request.user|has_group:"Owners" %}
     <li><a href="{% url "user-restaurants" %}">My restaurants</a></li>
+    {% endif %}
     <li><a href="{% url "user-reservations" %}">My reservations</a></li>
     </ul>
 {% endblock content %}

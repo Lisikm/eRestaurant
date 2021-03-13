@@ -97,7 +97,7 @@ class AddRestaurantView(GroupRequiredMixin, View):
         return render(request, "addrestaurant.html", {"form": form})
 
 
-class AddRestaurantMenuView(roupRequiredMixin, View):
+class AddRestaurantMenuView(GroupRequiredMixin, View):
     group_required = u"Owners"
 
     def get(self, request, pk):
