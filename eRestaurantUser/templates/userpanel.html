@@ -2,11 +2,12 @@
 {% load auth_extras %}
 {% block content %}
     <div class="description-div center-div">
-    <ul>
+    <ol>
     {% if request.user|has_group:"Owners" %}
         <li><h2><a href="{% url "user-restaurants" %}">My restaurants</a></h2></li>
     {% endif %}
         <li><h2><a href="{% url "user-reservations" %}">My reservations</a></h2></li>
-    </ul>
+    </ol>
     </div>
+
 {% endblock content %}

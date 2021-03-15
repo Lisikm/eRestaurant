@@ -6,10 +6,10 @@
             <h1>{{ restaurant.name }}</h1>
         </div>
         <div>
-            <h4>Category: </h4>
+            <h4>{{ restaurant.description }}</h4>
         </div>
         <div>
-            <h2>{{ restaurant.category }}</h2>
+            <h3>Category: {{ restaurant.category }}</h3>
         </div>
         <div>
             <h4>Opening hours:</h4>
@@ -19,12 +19,7 @@
                 <div class="center">{{ hour.get_day_of_the_week_display }}: {{ hour.from_hour }}-{{ hour.to_hour }}</div>
             {% endfor %}
         </div>
-        <div>
-            <h4>Description:</h4>
-        </div>
-        <div>
-            {{ restaurant.description }}
-        </div>
+
 
         <div class="logo">
             <h1>Menus:</h1>

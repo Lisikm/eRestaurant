@@ -2,7 +2,7 @@ from braces.views import GroupRequiredMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
-from eMenu.models import Restaurant, Note, Menu
+from eMenu.models import Restaurant, Note
 from eReservation.models import Reservation
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -22,7 +22,11 @@ class LoginView(View):
                 user = authenticate(username=username, password=form.cleaned_data['password'])
                 if user:
                     login(request, user)
-                    return redirect("user-panel")
+                    next_url = request.GET.get("next", None)
+                    if next_url is None:
+                        return redirect("user-panel")
+                    else:
+                        return redirect(next_url)
                 else:
                     return render(request, "login.html", {"form": form, "error": "Wrong password"})
             return render(request, "login.html", {"form": form, "error": "User not found"})
