@@ -1,23 +1,49 @@
 {% extends 'home.html' %}
 {% block content %}
-    <p>Add new restaurant <a href="{% url "restaurant-add" %}">here</a></p>
+     <div class="description-div center-div">
+        <h2>Add new restaurant <a href="{% url "restaurant-add" %}">here</a></h2>
+     </div>
+    <div class="head-div">
+            <div style="width: 30%">
+                <h2>Restaurant name</h2>
+            </div>
+            <div style="width: 15%">
+                <h2>Notes</h2>
+            </div>
+            <div class="center" style="width: 20%">
+                <h2>Authorized</h2>
+            </div>
+            <div class="center" style="width: 35%">
+                <h2>Menus</h2>
+            </div>
+    </div>
     <ol>
     {% for restaurant in restaurants %}
         <li>
+            <div class="description" style="width: 30%">
             <h2><a href="{% url "restaurant" restaurant.id %}">{{ restaurant.name }}</a></h2>
+            </div>
+            <div class="description" style="width: 15%">
                 <a href="{% url "restaurant-notes" restaurant.id %}">Restaurant notes</a>
-        {% if restaurant.authorized %}
-            <p>Authorized</p>
-        {% else %}
-            <p>Not authorized</p>
-        {% endif %}
-        <p>Menus:
-        {% for menu in restaurant.menu_set.all %}
-            <a href="{% url "menu" menu.id %}">{{ menu.name }}</a>
-            (<a href="{% url "menu-modify" menu.id %}">Modify</a>),
-        {% endfor %}
-        <a href="{% url "menu-add" restaurant.id %}">Add new menu</a>
-        </p>
+            </div>
+            <div class="center" style="width: 20%">
+                {% if restaurant.authorized %}
+                    &#9989;
+                {% else %}
+                    &#10060;
+                {% endif %}
+            </div>
+            <div class="description center-div" style="width: 35%;">
+                {% for menu in restaurant.menu_set.all %}
+                    <div>
+                    <a href="{% url "menu" menu.id %}">{{ menu.name }}</a>
+                    <a href="{% url "menu-modify" menu.id %}">(Modify)</a>
+                    </div>
+                {% endfor %}
+                    <div style="text-decoration: underline">
+                        <a href="{% url "menu-add" restaurant.id %}">Add new menu</a>
+                    <div>
+            </div>
         </li>
     {% endfor %}
     </ol>

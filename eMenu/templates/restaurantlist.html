@@ -1,9 +1,29 @@
 {% extends 'home.html' %}
 {% block content %}
+    <div class="head-div">
+            <div class="div3">
+                <h2>Restaurant name</h2>
+            </div>
+            <div class="div3">
+                <h2>Description</h2>
+            </div>
+            <div class="div3">
+                <h2>Category</h2>
+            </div>
+    </div>
     <ol>
     {% for restaurant in restaurants %}
         <li>
-            <h2><a href="{% url "restaurant" restaurant.id %}">{{ restaurant.name }}</a></h2>
+            <div class="div3">
+                <h2><a href="{% url "restaurant" restaurant.id %}">{{ restaurant.name }}</a></h2>
+            </div>
+            <div class="div3 description">
+                {{ restaurant.description }}
+            </div>
+            <div class="div3">
+                <h3>{{ restaurant.category }}</h3>
+            </div>
+
         </li>
     {% endfor %}
     </ol>

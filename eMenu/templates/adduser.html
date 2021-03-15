@@ -1,16 +1,23 @@
 {% extends "home.html" %}
 {% block content %}
-   <h2>Adding User</h2>
+    <div class="description-div center-div">
+        <h2>Adding User</h2>
+    </div>
+    <div class="description-div center-div myform">
     <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Add">
     </form>
+    </div>
+    <div class="description-div center-div">
+        <div>Password requirements:</div>
+        Password must be at least 8 characters long.<br>
+        Password must contain at least 1 lowercase letter.<br>
+        Password must contain at least 1 uppercase letter.<br>
+        Password must contain at least 1 number.<br>
+        Password must contain at least 1 special character.<br>
+        <div style="background-color: #9e9e9e">!"#$%&'()*+, -./:;<=>?@[\]^_`{|}~</div></p>
 
-    <p>Password requirements:</p>
-    <p>Password must be at least 8 characters long.</p>
-    <p>Password must contain at least 1 lowercase letter.</p>
-    <p>Password must contain at least 1 uppercase letter.</p>
-    <p>Password must contain at least 1 number.</p>
-    <p>Password must contain at least 1 special character. (!"#$%&'()*+, -./:;<=>?@[\]^_`{|}~)</p>
+    </div>
 {% endblock %}

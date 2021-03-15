@@ -37,12 +37,12 @@ def password_validator(password):
 
 
 class AddUserForm(forms.Form):
-    login = forms.CharField(validators=[login_validator], label="login")
-    password = forms.CharField(widget=forms.PasswordInput, label="password")
-    password2 = forms.CharField(widget=forms.PasswordInput, label="repeat password")
-    name = forms.CharField(label="name")
-    surname = forms.CharField(label="surname")
-    email = forms.EmailField(label="email")
+    login = forms.CharField(validators=[login_validator], label="Login")
+    password = forms.CharField(widget=forms.PasswordInput, label="Password")
+    password2 = forms.CharField(widget=forms.PasswordInput, label="Repeat password")
+    name = forms.CharField(label="Name")
+    surname = forms.CharField(label="Surname")
+    email = forms.EmailField(label="Email")
 
     def clean(self):
         cleaned_data = super().clean()

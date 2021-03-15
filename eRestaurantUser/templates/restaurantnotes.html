@@ -1,14 +1,51 @@
 {% extends 'home.html' %}
 {% block content %}
-    <h3>Notes for restaurant: {{ notes.0.restaurant.name }}</h3>
+    {% if notes %}
+    <div class="description-div center-div">
+        <h2>Notes for restaurant:
+            <a href="{% url "restaurant" notes.0.restaurant.id %}">{{ notes.0.restaurant.name }}</a></h2>
+    </div>
+    <div class="head-div">
+            <div style="width: 20%">
+                <h2>Title</h2>
+            </div>
+            <div style="width: 40%">
+                <h2>Content</h2>
+            </div>
+            <div style="width: 20%">
+                <h2>From</h2>
+            </div>
+            <div style="width: 20%">
+                <h2>Delete</h2>
+            </div>
+    </div>
     <ol>
     {% for note in notes %}
         <li>
-            <p>Title: {{ note.title }}</p>
-            <p>Content: {{ note.content }}</p>
-            <p>From user: {{ note.user }} / email: {{ note.email }}</p>
+            <div class="description" style="width: 20%">
+            <h3>{{ note.title }}</h3>
+            </div>
+            <div class="description" style="width: 40%">
+            <p>{{ note.content }}</p>
+            </div>
+            <div class="description-div" style="width: 20%">
+                <div>
+                    User: {{ note.user }}
+                </div>
+                <div>
+                    Email: {{ note.email }}
+                </div>
+            </div>
+            <div class="description-div" style="width: 20%">
             <p><a href="{% url "restaurant-note-delete" note.id %}">Delete note</a></p>
+            </div>
         </li>
     {% endfor %}
     </ol>
+    {% else %}
+        <div class="description-div center-div">
+        <h2>No notes for this restaurant.</h2>
+        </div>
+    {% endif %}
+
 {% endblock content %}

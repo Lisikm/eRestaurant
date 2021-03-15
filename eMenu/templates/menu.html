@@ -1,17 +1,70 @@
 {% extends 'home.html' %}
 {% block content %}
-    <h1>Name: {{ menu.name }}</h1>
-    <h3>Restaurant: <a href="{% url "restaurant" menu.restaurant.id %}">{{ menu.restaurant.name }}</a></h3>
-    <h3>Category: {{ menu.restaurant.category }}</h3>
-    <p>Description: {{ menu.description }}</p>
-    <h2>Dishes:</h2>
+    <div class="description-div center-div">
+        <div>
+            <h1>{{ menu.name }}</h1>
+        </div>
+        <div>
+            <h4>Restaurant:</h4>
+        </div>
+            <h2><a href="{% url "restaurant" menu.restaurant.id %}">{{ menu.restaurant.name }}</a></h2>
+        <div>
+            <h4>Category: </h4>
+        </div>
+        <div>
+            <h2>{{ menu.restaurant.category }}</h2>
+        </div>
+        <div>
+            <h4>Description:</h4>
+        </div>
+        <div>
+            {{ menu.description }}
+        </div>
+
+        <div class="logo">
+            <h1>Dishes:</h1>
+        </div>
+
+
+
+    </div>
+        <div class="head-div">
+            <div style="width: 25%">
+                <h2>Dish name</h2>
+            </div>
+            <div style="width: 30%">
+                <h2>Description</h2>
+            </div>
+            <div style="width: 15%">
+                <h2>Price</h2>
+            </div>
+            <div style="width: 15%">
+                <h2>Preparation</h2>
+            </div>
+            <div class="center" style="width: 15%">
+                <h2>Wegetarian</h2>
+            </div>
+        </div>
         <ol>
             {% for elem in menu.dish_set.all %}
-                <li><h3>{{ elem.name }}</h3>
-                <p>{{ elem.description }}</p>
-                <p>Price {{ elem.price }}</p>
-                <p>Preparation time: {{ elem.preparation_time }}</p>
-                <p>Is wegetarian: {{ elem.is_wegetarian }}</p>
+                <li>
+                    <div style="width: 25%">
+                        <h3>{{ elem.name }}</h3>
+                    </div>
+                    <div class="description" style="width: 30%">
+                        {{ elem.description }}
+                    </div>
+                    <div class="description" style="width: 15%">
+                        {{ elem.price }} PLN
+                    </div>
+                    <div class="description" style="width: 15%">
+                        {{ elem.preparation_time }} minutes
+                    </div>
+                    <div class="center" style="width: 15%">
+                        {% if elem.is_wegetarian %}
+                        &#9989;
+                    {% endif %}
+                    </div>
                 </li>
             {% endfor %}
         </ol>

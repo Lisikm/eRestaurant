@@ -1,16 +1,50 @@
 {% extends 'home.html' %}
 {% block content %}
-    <h3>Booking information:</h3>
-    <ol>
-    {% for reservation in reservations %}
-        <li>
-            <p>Restaurant: {{ reservation.table.restaurant.name }}</p>
-            <p>Table: {{ reservation.table.name }}</p>
-            <p>Reservation hours: {{ reservation.from_hour }}-{{ reservation.to_hour }}</p>
-            {% if reservation.description %}
-            <p>Note: {{ reservation.description }}</p>
-            {% endif %}
-        </li>
+    {% if reservations %}
+        <div class="description-div center-div">
+            <h2>My bookings:</h2>
+        </div>
+        <div class="head-div">
+            <div style="width: 25%">
+                <h2>Restaurant name</h2>
+            </div>
+            <div class="center" style="width: 25%">
+                <h2>Table</h2>
+            </div>
+            <div class="center" style="width: 25%">
+                <h2>Reservation hours</h2>
+            </div>
+            <div class="center" style="width: 25%">
+                <h2>Note</h2>
+            </div>
+        </div>
+        <ol>
+        {% for reservation in reservations %}
+            <li>
+                <div style="width: 25%;">
+                    <h2>{{ reservation.table.restaurant.name }}</h2>
+                </div>
+                <div class="center" style="width: 25%">
+                    <div><h3>{{ reservation.table.name }}</h3></div>
+                </div>
+                <div class="center" style="width: 25%">
+                    <h3>{{ reservation.from_hour }}-{{ reservation.to_hour }}</h3>
+                </div>
+                <div class="center" style="width: 25%">
+                    {% if reservation.description %}
+                        <h4>{{ reservation.description }}</h4>
+                    {% else %}
+                        <h3>No note</h3>
+                    {% endif %}
+                </div>
+
+
+            </li>
     {% endfor %}
-    </ol>
+        </ol>
+    {% else %}
+        <div class="description-div center-div">
+        <h2>No notes for this restaurant.</h2>
+        </div>
+    {% endif %}
 {% endblock content %}

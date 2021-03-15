@@ -34,17 +34,17 @@ class AddRestaurantForm(forms.Form):
         if int(cleaned_data["monday_from"]) > int(cleaned_data["monday_to"]):
             raise ValidationError("Monday opening hours are incorrect")
         if int(cleaned_data["tuesday_from"]) > int(cleaned_data["tuesday_to"]):
-            raise ValidationError("Monday opening hours are incorrect")
+            raise ValidationError("Tuesday opening hours are incorrect")
         if int(cleaned_data["wednesday_from"]) > int(cleaned_data["wednesday_to"]):
-            raise ValidationError("Monday opening hours are incorrect")
+            raise ValidationError("Wednesday opening hours are incorrect")
         if int(cleaned_data["thursday_from"]) > int(cleaned_data["thursday_to"]):
-            raise ValidationError("Monday opening hours are incorrect")
+            raise ValidationError("Thursday opening hours are incorrect")
         if int(cleaned_data["friday_from"]) > int(cleaned_data["friday_to"]):
-            raise ValidationError("Monday opening hours are incorrect")
+            raise ValidationError("Friday opening hours are incorrect")
         if int(cleaned_data["saturday_from"]) > int(cleaned_data["saturday_to"]):
-            raise ValidationError("Monday opening hours are incorrect")
+            raise ValidationError("Saturday opening hours are incorrect")
         if int(cleaned_data["sunday_from"]) > int(cleaned_data["sunday_to"]):
-            raise ValidationError("Monday opening hours are incorrect")
+            raise ValidationError("Sunday opening hours are incorrect")
 
 
 class AddRestaurantMenuForm(forms.ModelForm):

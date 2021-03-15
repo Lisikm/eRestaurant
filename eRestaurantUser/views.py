@@ -22,7 +22,7 @@ class LoginView(View):
                 user = authenticate(username=username, password=form.cleaned_data['password'])
                 if user:
                     login(request, user)
-                    return redirect("home")
+                    return redirect("user-panel")
                 else:
                     return render(request, "login.html", {"form": form, "error": "Wrong password"})
             return render(request, "login.html", {"form": form, "error": "User not found"})

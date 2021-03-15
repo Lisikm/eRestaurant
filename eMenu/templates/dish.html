@@ -1,11 +1,33 @@
 {% extends 'home.html' %}
 {% block content %}
-    <h2>Dish view</h2>
-    <h3>{{ dish.name }}</h3>
-    <p>{{ dish.description }}</p>
-    <p>Price {{ dish.price }}</p>
-    <p>Preparation time: {{ dish.preparation_time }}</p>
-    <p>Is wegetarian: {{ dish.is_wegetarian }}</p>
+    <div class="center-div">
+        <div>
+            <h1>{{ dish.name }}</h1>
+        </div>
+        <div>
+            <h3>{{ dish.description }}</h3>
+        </div>
+        <div>
+            <h3>Price: {{ dish.price }} PLN</h3>
+        </div>
+        <div>
+            <h3>Preparation time: {{ dish.preparation_time }} min</h3>
+        </div>
+        <div>
+            <h3>
+                Wegetarian:
+            </h3>
+            <h3 class="center">
+            {% if dish.is_wegetarian %}
+                        &#9989;
+                    {% else %}
+                        &#10060;
+                    {% endif %}
+            </h3>
+        </div>
+        <div>
+            <h3><a href="{% url "dish-modify" dish.id %}">Modify</a></h3>
+        </div>
 
-    <a href="{% url "dish-modify" dish.id %}">Modify</a>
+    </div>
 {% endblock content %}

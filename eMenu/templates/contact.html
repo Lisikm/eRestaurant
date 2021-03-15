@@ -1,9 +1,11 @@
 {% extends 'home.html' %}
 {% block content %}
+    <div class="center-div myform">
     <h2>Make contact note:</h2>
     <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <p><input type="submit" value="Send"></p>
     </form>
+    </div>
 {% endblock content %}
