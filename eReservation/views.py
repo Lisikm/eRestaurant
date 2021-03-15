@@ -3,6 +3,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, HttpResponse
 from django.views import View
 from datetime import date, timedelta
+
+from .forms import AddTableForm
 from .models import Table, Reservation
 from eMenu.models import Restaurant, OpeningHours
 import re
@@ -153,8 +155,9 @@ class TableListView(GroupRequiredMixin, View):
     group_required = u"Owners"
 
     def get(self, request, pk):
-        tables = Table.objects.filter(restaurant_id=pk)
-        return render(request, "tablelist.html", {"tables": tables})
+        restaurant = Restaurant.objects.get(pk=pk)
+        tables = Table.objects.filter(restaurant=restaurant)
+        return render(request, "tablelist.html", {"tables": tables, "restaurant":restaurant})
 
 
 class TableReservationsView(GroupRequiredMixin, View):
@@ -275,3 +278,24 @@ class ReserveTableView(LoginRequiredMixin, View):
             )
             return render(request, "successreservation.html", {"reservation": reservation})
         return render(request, "error.html", {"error": error})
+
+
+class AddRestaurantTableView(GroupRequiredMixin, View):
+    group_required = u"Owners"
+
+    def get(self, request, pk):
+        form = AddTableForm()
+        return render(request, "addtable.html", {"form":form})
+
+    def post(self, request, pk):
+        form = AddTableForm(request.POST)
+        restaurant = Restaurant.objects.get(pk=pk)
+        if form.is_valid():
+            Table.objects.create(
+                name=form.cleaned_data["name"],
+                description=form.cleaned_data["description"],
+                seats=form.cleaned_data["seats"],
+                restaurant=restaurant
+            )
+            return redirect("table-list", restaurant.id)
+        return render(request, "addtable.html", {"form": form})

@@ -15,7 +15,10 @@
             <div style="width: 20%">
                 <h2>From</h2>
             </div>
-            <div style="width: 20%">
+            <div class="center" style="width: 10%">
+                <h2>Date</h2>
+            </div>
+            <div class="center" style="width: 10%">
                 <h2>Delete</h2>
             </div>
     </div>
@@ -36,7 +39,10 @@
                     Email: {{ note.email }}
                 </div>
             </div>
-            <div class="description-div" style="width: 20%">
+            <div class="center" style="width: 10%">
+            <p>{{ note.add_date }}</p>
+            </div>
+            <div class="center" style="width: 10%">
             <p><a href="{% url "restaurant-note-delete" note.id %}">Delete note</a></p>
             </div>
         </li>

@@ -18,7 +18,8 @@ from django.urls import path
 from eMenu.views import HomeView, RestaurantListView, RestaurantView, MenuListView, \
     MenuView, ContactView, AddRestaurantView, AddRestaurantMenuView, ModifyRestaurantMenuView, AddNewDishView, \
     ModifyDishView, DishView, ErrorView, RemoveFromMenuView, AddExistingDishToMenuView
-from eReservation.views import TableListView, TableReservationsView, ReservationDateView, ReserveTableView
+from eReservation.views import TableListView, TableReservationsView, ReservationDateView, ReserveTableView, \
+    AddRestaurantTableView
 from eRestaurantUser.views import UserPanelView, UserRestaurantsView, LoginView, LogoutView, AddUserView, \
     UserReservationsView, UserRestaurantNotesView, UserRestaurantNoteDeleteView
 
@@ -33,8 +34,8 @@ urlpatterns = [
     path('restaurant/<int:pk>/', RestaurantView.as_view(), name='restaurant'),
     path('menu/', MenuListView.as_view(), name='menu-list'),
     path('menu/<int:pk>/', MenuView.as_view(), name='menu'),
-    path('tables/<int:pk>/', TableListView.as_view(), name='table-list'),
-    path('table/<int:pk>/reservations/', TableReservationsView.as_view(), name='table-reservations'),
+    path('restaurant/<int:pk>/tables/', TableListView.as_view(), name='table-list'),
+    path('restaurant/table/<int:pk>/reservations/', TableReservationsView.as_view(), name='table-reservations'),
     path('restaurant/<int:pk>/contact/', ContactView.as_view(), name='contact'),
     path('restaurant/<int:pk>/reservation_date/', ReservationDateView.as_view(), name='reservation-date'),
     path('restaurant/<int:pk>/<str:day>/<int:hour>/', ReserveTableView.as_view(), name='reserve-table'),
@@ -45,6 +46,7 @@ urlpatterns = [
     path('user_panel/note/<int:pk>/delete', UserRestaurantNoteDeleteView.as_view(), name='restaurant-note-delete'),
     path('user_panel/restaurants/add', AddRestaurantView.as_view(), name='restaurant-add'),
     path('user_panel/restaurants/<int:pk>/menu/add', AddRestaurantMenuView.as_view(), name='menu-add'),
+    path('user_panel/restaurants/<int:pk>/table/add', AddRestaurantTableView.as_view(), name='table-add'),
     path('user_panel/menu/<int:pk>/', ModifyRestaurantMenuView.as_view(), name='menu-modify'),
     path('user_panel/menu/<int:pk>/dish/add', AddNewDishView.as_view(), name='dish-add'),
     path('user_panel/menu/<int:pk>/dish/add_existing', AddExistingDishToMenuView.as_view(), name='dish-add-existing'),

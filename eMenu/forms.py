@@ -7,7 +7,7 @@ from .models import Note, Restaurant, OpeningHours, DOTW, CATEGORY, HOURS, Menu,
 class NoteForm(forms.ModelForm):
     class Meta:
         model = Note
-        exclude = ["restaurant", "user"]
+        exclude = ["restaurant", "user", "add_date"]
 
 
 class AddRestaurantForm(forms.Form):

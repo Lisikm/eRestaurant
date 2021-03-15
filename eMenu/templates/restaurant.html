@@ -62,11 +62,7 @@
         <h2><a href="{% url "reservation-date" restaurant.id %}">Make reservation for 4 or less people</a></h2>
         </div>
         <div>
-    {% if not request.user|has_group:"Owners" %}
         <h2><a href="{% url "contact" restaurant.id %}">Contact us for larger bookings</a></h2>
-    {% else %}
-        <h2><a href="{% url "table-list" restaurant.id %}">Tables list</a></h2>
-    {% endif %}
         </div>
     </div>
 

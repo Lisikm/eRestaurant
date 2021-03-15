@@ -97,12 +97,19 @@ class Dish(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return self.name,
+
+    class Meta:
+        ordering = ['-price', 'name']
 
 
 class Note(models.Model):
     title = models.CharField(max_length=128)
     content = models.TextField()
     email = models.EmailField()
+    add_date = models.DateField(auto_now_add=True)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['add_date']

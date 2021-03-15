@@ -1,8 +1,9 @@
 {% extends 'home.html' %}
 {% block content %}
     <div class="center-div">
-        <h2>{{ tables.0.restaurant.name }} tables list</h2>
+        <h2>{{ restaurant.name }} tables list</h2>
     </div>
+    {% if tables %}
     <div class="head-div">
             <div style="width: 20%">
                 <h2>Name</h2>
@@ -17,6 +18,7 @@
                 <h2>Possible reservations</h2>
             </div>
     </div>
+    {% endif %}
     <ol>
     {% for table in tables %}
         <li>
@@ -35,4 +37,7 @@
         </li>
     {% endfor %}
     </ol>
+    <div class="center-div">
+        <h2><a href="{% url "table-add" restaurant.id %}">Add table</a></h2>
+    </div>
 {% endblock content %}
