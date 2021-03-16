@@ -1,0 +1,12 @@
+{% extends 'home.html' %}
+{% block content %}
+    <div class="center-div">
+    <h1>Congratulations, you have sent a contact note.</h1>
+
+    <h3>Note information:</h3>
+    <p>Restaurant: {{ note.restaurant.name }}</p>
+    <p>Content: {{ note.content }}</p>
+    <p>Email: {{ note.email }}</p>
+
+    </div>
+{% endblock content %}

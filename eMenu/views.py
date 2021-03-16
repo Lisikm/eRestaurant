@@ -32,7 +32,7 @@ class ContactView(LoginRequiredMixin, View):
                 restaurant=Restaurant.objects.get(pk=pk),
                 user=request.user
             )
-            return redirect("restaurant", pk)
+            return render(request, "succesnote.html", {"note":note})
         else:
             return render(request, "contact.html", {"form": form})
 
@@ -111,7 +111,8 @@ class AddRestaurantMenuView(GroupRequiredMixin, View):
                 name=form.cleaned_data['name'],
                 description=form.cleaned_data['description'],
                 restaurant=Restaurant.objects.get(pk=pk),
-                user=request.user
+                user=request.user,
+                authorized=True
             )
             return redirect('user-restaurants')
         return render(request, "addmenu.html", {"form": form})

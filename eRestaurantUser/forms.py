@@ -27,9 +27,9 @@ def password_validator(password):
     if len(password) < 8:
         raise ValidationError("Password must be at least 8 characters long.")
     if password.islower():
-        raise ValidationError("Password must contain at least 1 lowercase letter")
-    if password.isupper():
         raise ValidationError("Password must contain at least 1 uppercase letter")
+    if password.isupper():
+        raise ValidationError("Password must contain at least 1 lowercase letter")
     if num == False:
         raise ValidationError("Password must contain at least 1 number")
     if ss == False:
