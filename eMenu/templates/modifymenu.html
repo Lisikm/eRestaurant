@@ -2,6 +2,9 @@
 {% block content %}
     <div class="center-div myform">
         <h2>Modify menu</h2>
+        {% if error %}
+            <h3>{{ error }}</h3>
+        {% endif %}
         <form method="post">
         {% csrf_token %}
         {{ form.as_p }}

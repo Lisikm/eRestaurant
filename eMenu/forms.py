@@ -53,6 +53,12 @@ class AddRestaurantMenuForm(forms.ModelForm):
         exclude = ["restaurant", "user", "add_date", "mod_date", "authorized"]
 
 
+class ModifyRestaurantMenuForm(forms.ModelForm):
+    class Meta:
+        model = Menu
+        exclude = ["restaurant", "user", "add_date", "mod_date"]
+
+
 class AddNewDishForm(forms.ModelForm):
     class Meta:
         model = Dish

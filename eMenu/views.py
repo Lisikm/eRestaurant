@@ -2,7 +2,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
 from .models import Restaurant, Menu, Note, OpeningHours, Dish
-from .forms import NoteForm, AddRestaurantForm, AddRestaurantMenuForm, AddNewDishForm, AddExistingDishForm
+from .forms import NoteForm, AddRestaurantForm, AddRestaurantMenuForm, AddNewDishForm, AddExistingDishForm, \
+    ModifyRestaurantMenuForm
 from braces.views import GroupRequiredMixin
 
 
@@ -97,6 +98,21 @@ class AddRestaurantView(GroupRequiredMixin, View):
         return render(request, "addrestaurant.html", {"form": form})
 
 
+class RestaurantUnauthorisedView(GroupRequiredMixin, View):
+    group_required = u"Owners"
+
+    def get(self, request, pk):
+        restaurant = Restaurant.objects.get(pk=pk)
+        if restaurant.user == request.user:
+            restaurant.authorized = False
+            restaurant.save()
+            for menu in restaurant.menu_set.all():
+                menu.authorized = False
+                menu.save()
+            return redirect("user-restaurants")
+        return redirect("user-restaurants")
+
+
 class AddRestaurantMenuView(GroupRequiredMixin, View):
     group_required = u"Owners"
 
@@ -112,7 +128,7 @@ class AddRestaurantMenuView(GroupRequiredMixin, View):
                 description=form.cleaned_data['description'],
                 restaurant=Restaurant.objects.get(pk=pk),
                 user=request.user,
-                authorized=True
+                authorized=False
             )
             return redirect('user-restaurants')
         return render(request, "addmenu.html", {"form": form})
@@ -123,21 +139,40 @@ class ModifyRestaurantMenuView(GroupRequiredMixin, View):
 
     def get(self, request, pk):
         menu = Menu.objects.get(pk=pk)
-        form = AddRestaurantMenuForm(initial={
+        form = ModifyRestaurantMenuForm(initial={
             'name': menu.name,
-            'description': menu.description
+            'description': menu.description,
+            'authorized': menu.authorized
         })
         return render(request, "modifymenu.html", {"form": form, "menu": menu})
 
     def post(self, request, pk):
-        form = AddRestaurantMenuForm(request.POST)
         menu = Menu.objects.get(pk=pk)
+        form = ModifyRestaurantMenuForm(request.POST, instance=menu)
         if form.is_valid():
             menu.name = form.cleaned_data['name']
             menu.description = form.cleaned_data['description']
+            if not menu.restaurant.authorized:
+                if form.cleaned_data['authorized']:
+                    return render(request, "modifymenu.html", {"form": form, "menu": menu,
+                                                               "error":"You can not set menu to authorized "
+                                                                       "when restaurant is unauthorized."})
+            else:
+                menu.authorized = form.cleaned_data['authorized']
             menu.save()
             return redirect('user-restaurants')
         return render(request, "modifymenu.html", {"form": form, "menu": menu})
+
+
+class DeleteRestaurantMenuView(GroupRequiredMixin, View):
+    group_required = u"Owners"
+
+    def get(self, request, pk):
+        menu = Menu.objects.get(pk=pk)
+        if menu.user == request.user:
+            menu.delete()
+            return redirect("user-restaurants")
+        return redirect("user-restaurants")
 
 
 class DishView(GroupRequiredMixin, View):
@@ -188,7 +223,7 @@ class ModifyDishView(GroupRequiredMixin, View):
 
     def post(self, request, pk):
         dish = Dish.objects.get(pk=pk)
-        form = AddNewDishForm(request.POST)
+        form = AddNewDishForm(request.POST, instance=dish)
         if form.is_valid():
             dish.name = form.cleaned_data["name"]
             dish.description = form.cleaned_data["description"]
@@ -196,7 +231,7 @@ class ModifyDishView(GroupRequiredMixin, View):
             dish.preparation_time = form.cleaned_data["preparation_time"]
             dish.is_wegetarian = form.cleaned_data["is_wegetarian"]
             dish.save()
-            return redirect("user-restaurants")
+            return redirect("dish", dish.id)
         return render(request, "modifydish.html", {"form": form})
 
 

@@ -29,9 +29,10 @@
             <div class="center" style="width: 15%">
                 <a href="{% url "restaurant-notes" restaurant.id %}">Restaurant notes</a>
             </div>
-            <div class="center" style="width: 20%">
+            <div class="center-div" style="width: 20%">
                 {% if restaurant.authorized %}
-                    &#9989;
+                    <div>&#9989;</div>
+                    <div><a href="{% url "restaurant-auth" restaurant.id %}">(Set to unauthorized)</a></div>
                 {% else %}
                     &#10060;
                 {% endif %}
@@ -43,7 +44,15 @@
                 {% for menu in restaurant.menu_set.all %}
                     <div>
                     <a href="{% url "menu" menu.id %}">{{ menu.name }}</a>
-                    <a href="{% url "menu-modify" menu.id %}">(Modify)</a>
+                    {% if menu.authorized %}
+                    &#9989;
+                    {% else %}
+                    &#10060;
+                    {% endif %}
+                    </div>
+                    <div>
+                    <a href="{% url "menu-modify" menu.id %}">(Modify</a>,
+                    <a href="{% url "menu-delete" menu.id %}">Delete)</a>
                     </div>
                 {% endfor %}
                     <div style="text-decoration: underline">

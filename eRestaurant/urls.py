@@ -17,7 +17,8 @@ from django.contrib import admin
 from django.urls import path
 from eMenu.views import HomeView, RestaurantListView, RestaurantView, MenuListView, \
     MenuView, ContactView, AddRestaurantView, AddRestaurantMenuView, ModifyRestaurantMenuView, AddNewDishView, \
-    ModifyDishView, DishView, ErrorView, RemoveFromMenuView, AddExistingDishToMenuView
+    ModifyDishView, DishView, ErrorView, RemoveFromMenuView, AddExistingDishToMenuView, DeleteRestaurantMenuView,\
+    RestaurantUnauthorisedView
 from eReservation.views import TableListView, TableReservationsView, ReservationDateView, ReserveTableView, \
     AddRestaurantTableView
 from eRestaurantUser.views import UserPanelView, UserRestaurantsView, LoginView, LogoutView, AddUserView, \
@@ -53,5 +54,7 @@ urlpatterns = [
     path('user_panel/menu/<int:m_pk>/dish/<int:d_pk>/remove', RemoveFromMenuView.as_view(), name='dish-menu-remove'),
     path('user_panel/dish/<int:pk>/modify', ModifyDishView.as_view(), name='dish-modify'),
     path('user_panel/dish/<int:pk>', DishView.as_view(), name='dish'),
+    path('user_panel/menu/<int:pk>/delete/', DeleteRestaurantMenuView.as_view(), name='menu-delete'),
+    path('user_panel/restaurant/<int:pk>/unauthorized/', RestaurantUnauthorisedView.as_view(), name='restaurant-auth'),
 
 ]

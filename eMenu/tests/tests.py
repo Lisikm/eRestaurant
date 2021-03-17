@@ -550,3 +550,25 @@ def test_dish_view(client, owner_user, fake_dish_db):
     response = client.get(reverse("dish", args=[dish.id]))
     assert response.status_code == 200
     assert dish == response.context["dish"]
+
+
+@pytest.mark.django_db
+def test_delete_restaurant_menu_view(client, owner_user, fake_menu_db):
+    client.login(username=owner_user.username, password='qwe')
+    restaurant = Restaurant.objects.filter(user=owner_user).first()
+    menu = restaurant.menu_set.first()
+    count = restaurant.menu_set.count()
+    response = client.get(reverse("menu-delete", args=[menu.id]))
+    assert response.status_code == 302
+    assert count - 1 == restaurant.menu_set.count()
+
+
+@pytest.mark.django_db
+def test_restaurant_unauthorised_view(client, owner_user, fake_menu_db):
+    client.login(username=owner_user.username, password='qwe')
+    restaurant = Restaurant.objects.filter(user=owner_user).first()
+    response = client.get(reverse("restaurant-auth", args=[restaurant.id]))
+    assert response.status_code == 302
+    restaurant_mod = Restaurant.objects.get(pk=restaurant.id)
+    assert restaurant_mod.authorized == False
+    assert restaurant_mod.menu_set.first().authorized == False
