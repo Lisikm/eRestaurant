@@ -136,7 +136,7 @@ class ModifyRestaurantMenuView(GroupRequiredMixin, View):
             menu.name = form.cleaned_data['name']
             menu.description = form.cleaned_data['description']
             menu.save()
-            return redirect('menu-modify', pk)
+            return redirect('user-restaurants')
         return render(request, "modifymenu.html", {"form": form, "menu": menu})
 
 
